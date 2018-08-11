@@ -31,7 +31,7 @@ export function render(element, parentDom) {
   parentDom.appendChild(dom);
 }
 
-const splitEventsAndAttributes = (props = {}) => {
+function splitEventsAndAttributes(props = {}) {
   return Object.keys(props).reduce(
     (memo, prop) => {
       if (prop.indexOf('on') === 0) {
@@ -46,4 +46,18 @@ const splitEventsAndAttributes = (props = {}) => {
       attributes: {}
     }
   );
-};
+}
+
+export function createElement(type, config, ...args) {
+  const props = { ...config };
+  const hasChildren = args.length > 0;
+  const rawChildren = hasChildren ? [].concat(...args) : [];
+  props.children = rawChildren
+    .filter(c => c != null && c !== false)
+    .map(c => (c instanceof Object ? c : createTextElement(c)));
+  return { type, props };
+}
+
+function createTextElement(value) {
+  return createElement(ELEMENT_TYPES.TEXT_ELEMENT, { nodeValue: value });
+}

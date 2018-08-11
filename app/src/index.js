@@ -1,25 +1,11 @@
-import { render, ELEMENT_TYPES } from '../../src';
+import { render, createElement } from '../../src';
 
-const element = {
-  type: 'div',
-  props: {
-    id: 'container',
-    children: [
-      { type: 'input', props: { value: 'foo', type: 'text' } },
-      { type: 'a', props: { href: '/bar' } },
-      {
-        type: 'span',
-        props: {
-          children: [
-            {
-              type: ELEMENT_TYPES.TEXT_ELEMENT,
-              props: { nodeValue: 'Foo' }
-            }
-          ]
-        }
-      }
-    ]
-  }
-};
+const element = (
+  <div id="container">
+    <input value="foo" type="text" />
+    <a href="/bar">bar</a>
+    <span onClick={() => alert('Hi')}>click me</span>
+  </div>
+);
 
 render(element, document.getElementById('root'));
