@@ -5,11 +5,15 @@
     "node": true
   },
   "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "plugins": ["jsx"],
   "parserOptions": {
     "ecmaVersion": 2018,
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
     }
+  },
+  "rules": {
+    "jsx/uses-factory": [1, { "pragma": "createElement" }]
   }
 }
