@@ -1,12 +1,25 @@
-import { test } from '../../src';
+import { render, ELEMENT_TYPES } from '../../src';
 
-function component() {
-  let element = document.createElement('div');
+const element = {
+  type: 'div',
+  props: {
+    id: 'container',
+    children: [
+      { type: 'input', props: { value: 'foo', type: 'text' } },
+      { type: 'a', props: { href: '/bar' } },
+      {
+        type: 'span',
+        props: {
+          children: [
+            {
+              type: ELEMENT_TYPES.TEXT_ELEMENT,
+              props: { nodeValue: 'Foo' }
+            }
+          ]
+        }
+      }
+    ]
+  }
+};
 
-  // Lodash, currently included via a script, is required for this line to work
-  element.innerHTML = ['Hello', 'webpack', test].join(' ');
-
-  return element;
-}
-
-document.body.appendChild(component());
+render(element, document.getElementById('root'));
