@@ -14,6 +14,9 @@ function reconcile(parentDom, instance, element) {
     const newInstance = instantiate(element);
     parentDom.appendChild(newInstance.dom);
     return newInstance;
+  } else if (element == null) {
+    parentDom.removeChild(instance.dom);
+    return null;
   } else if (instance.element.type === element.type) {
     // Update instance
     updateDomProperties(instance.dom, instance.element.props, element.props);
@@ -40,7 +43,7 @@ function reconcileChildren(instance, element) {
     const newChildInstance = reconcile(dom, childInstance, childElement);
     newChildInstances.push(newChildInstance);
   }
-  return newChildInstances;
+  return newChildInstances.filter(newChildInstance => newChildInstance != null);
 }
 
 function instantiate(element) {
