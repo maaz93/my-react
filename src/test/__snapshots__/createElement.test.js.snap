@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createElement should add different attributes 1`] = `
+Object {
+  "props": Object {
+    "children": Array [],
+    "id": "test",
+    "type": "text",
+    "value": "foo",
+  },
+  "type": "input",
+}
+`;
+
+exports[`createElement should add text content 1`] = `
+Object {
+  "props": Object {
+    "children": Array [
+      Object {
+        "props": Object {
+          "children": Array [],
+          "nodeValue": "text content",
+        },
+        "type": "TEXT_ELEMENT",
+      },
+    ],
+  },
+  "type": "span",
+}
+`;
+
+exports[`createElement should create children correctly 1`] = `
+Object {
+  "props": Object {
+    "children": Array [
+      Object {
+        "props": Object {
+          "children": Array [],
+          "id": "one",
+        },
+        "type": "span",
+      },
+      Object {
+        "props": Object {
+          "children": Array [],
+          "href": "/bar",
+        },
+        "type": "a",
+      },
+    ],
+  },
+  "type": "div",
+}
+`;
+
+exports[`createElement should create simple div element 1`] = `
+Object {
+  "props": Object {
+    "children": Array [],
+    "id": "test",
+  },
+  "type": "div",
+}
+`;
