@@ -9,42 +9,53 @@ export function render(element, container) {
 }
 
 function reconcile(parentDom, instance, element) {
-  if (instance === null) {
+  if (instance == null) {
+    // Create instance
     const newInstance = instantiate(element);
     parentDom.appendChild(newInstance.dom);
     return newInstance;
+  } else if (instance.element.type === element.type) {
+    // Update instance
+    updateDomProperties(instance.dom, instance.element.props, element.props);
+    instance.childInstances = reconcileChildren(instance, element);
+    instance.element = element;
+    return instance;
   } else {
+    // Replace instance
     const newInstance = instantiate(element);
     parentDom.replaceChild(newInstance.dom, instance.dom);
     return newInstance;
   }
 }
 
+function reconcileChildren(instance, element) {
+  const { dom, childInstances } = instance;
+  const nextChildElements = element.props.children || [];
+  const newChildInstances = [];
+  const count = Math.max(childInstances.length, nextChildElements.length);
+
+  for (let i = 0; i < count; i++) {
+    const childInstance = childInstances[i];
+    const childElement = nextChildElements[i];
+    const newChildInstance = reconcile(dom, childInstance, childElement);
+    newChildInstances.push(newChildInstance);
+  }
+  return newChildInstances;
+}
+
 function instantiate(element) {
-  const {
-    type,
-    props: { children, ...otherProps }
-  } = element;
+  const { type, props } = element;
 
   // Create DOM element
-  const dom =
-    type === ELEMENT_TYPES.TEXT_ELEMENT
-      ? document.createTextNode('')
-      : document.createElement(type);
-  const { events, attributes } = splitEventsAndAttributes(otherProps);
+  const isTextElement = type === ELEMENT_TYPES.TEXT_ELEMENT;
+  const dom = isTextElement
+    ? document.createTextNode('')
+    : document.createElement(type);
 
-  // Add events
-  Object.keys(events).forEach(eventName =>
-    dom.addEventListener(eventName, events[eventName])
-  );
-
-  // Add attributes
-  Object.keys(attributes).forEach(
-    attributeName => (dom[attributeName] = attributes[attributeName])
-  );
+  updateDomProperties(dom, [], props);
 
   // Instantiate and append children
-  const childElements = children || [];
+  const childElements = props.children || [];
   const childInstances = childElements.map(instantiate);
   const childDoms = childInstances.map(childInstance => childInstance.dom);
   childDoms.forEach(childDom => dom.appendChild(childDom));
@@ -53,21 +64,39 @@ function instantiate(element) {
   return instance;
 }
 
-function splitEventsAndAttributes(props = {}) {
-  return Object.keys(props).reduce(
-    (memo, prop) => {
-      if (prop.indexOf('on') === 0) {
-        memo.events[prop] = props[prop];
-      } else {
-        memo.attributes[prop] = props[prop];
-      }
-      return memo;
-    },
-    {
-      events: {},
-      attributes: {}
-    }
-  );
+function updateDomProperties(dom, prevProps, nextProps) {
+  const isEvent = name => name.startsWith('on');
+  const isAttribute = name => !isEvent(name) && name != 'children';
+
+  // Remove event listeners
+  Object.keys(prevProps)
+    .filter(isEvent)
+    .forEach(name => {
+      const eventType = name.toLowerCase().substring(2);
+      dom.removeEventListener(eventType, prevProps[name]);
+    });
+
+  // Remove attributes
+  Object.keys(prevProps)
+    .filter(isAttribute)
+    .forEach(name => {
+      dom[name] = null;
+    });
+
+  // Set attributes
+  Object.keys(nextProps)
+    .filter(isAttribute)
+    .forEach(name => {
+      dom[name] = nextProps[name];
+    });
+
+  // Add event listeners
+  Object.keys(nextProps)
+    .filter(isEvent)
+    .forEach(name => {
+      const eventType = name.toLowerCase().substring(2);
+      dom.addEventListener(eventType, nextProps[name]);
+    });
 }
 
 export function createElement(type, config, ...args) {
