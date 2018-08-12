@@ -7,3 +7,4 @@ An implementation of React as given in [this article](https://engineering.hexact
 - [ ] Write running instructions
 - [ ] Clean up webpack setups. Kinda clumsy atm
 - [ ] lint-staged
+- [ ] Change the custom eslint rule to only mark the correct `createElement` as used

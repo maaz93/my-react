@@ -1,0 +1,11 @@
+{
+  "name": "eslint-plugin-my-eslint-plugin",
+  "version": "1.0.0",
+  "description": "Custom rules for this project",
+  "main": "index.js",
+  "author": "Maaz Syed Adeeb",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^5.3.0"
+  }
+}

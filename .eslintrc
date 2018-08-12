@@ -5,7 +5,7 @@
     "node": true
   },
   "extends": ["eslint:recommended", "plugin:prettier/recommended"],
-  "plugins": ["jsx"],
+  "plugins": ["my-eslint-plugin"],
   "parserOptions": {
     "ecmaVersion": 2018,
     "sourceType": "module",
@@ -14,6 +14,6 @@
     }
   },
   "rules": {
-    "jsx/uses-factory": [1, { "pragma": "createElement" }]
+    "my-eslint-plugin/mark-create-element-as-used": 1
   }
 }
